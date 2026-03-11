@@ -29,6 +29,9 @@ wheels/
 dataset/
 !dataset/.gitkeep
 
+# Generated figures
+iframe_figures/
+
 # Jupyter Notebook
 .ipynb_checkpoints/
 *.ipynb_checkpoints

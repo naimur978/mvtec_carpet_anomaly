@@ -20,7 +20,7 @@ pip install -r requirements.txt
 Download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view) and place it under the `dataset` folder.
 
 **5. Prepare folder structure:**
-After step 4, your project structure should look like:
+After step 4, the project structure should look like:
 ```
 upm_interview_3/
 ├── dataset/

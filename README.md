@@ -24,8 +24,7 @@ After step 4, the project structure should look like:
 ```
 mvtec_carpet_anomaly/
 ├── dataset/
-│   ├── carpet.tar.xz
-│   └── .gitkeep
+│   └── carpet.tar.xz
 ├── notebook.ipynb
 ├── requirements.txt
 ├── README.md

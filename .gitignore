@@ -27,7 +27,6 @@ wheels/
 
 # Dataset
 dataset/
-!dataset/.gitkeep
 
 # Generated figures
 iframe_figures/

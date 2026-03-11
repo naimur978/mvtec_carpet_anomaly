@@ -79,12 +79,12 @@ I decided to build stuff from scratch instead of using pre-made libraries. This 
 
 ### Key Observations
 
-**Best Performance.** Feature extraction with FAISS indexing and KNN actually works best—beats most other approaches I tried. It consistently delivers solid detection and localization scores without needing heavy computational resources.
+Feature extraction with FAISS indexing and KNN actually works best—beats most other approaches I tried. It consistently delivers solid detection and localization scores without needing heavy computational resources. The simplicity is part of the appeal; it just gets the job done.
 
-**Dataset Limitations.** The carpet dataset is pretty small and not super diverse. There aren't many 45-degree rotated images or extreme variations, which means there's a natural ceiling on how well any model can generalize. It's a limitation of the data itself, not necessarily the approach.
+The carpet dataset is pretty small and not super diverse. There aren't many 45-degree rotated images or extreme variations, which means there's a natural ceiling on how well any model can generalize. It's a limitation of the data itself, not necessarily the approach. That's something to keep in mind.
 
-**Texture Sensitivity.** I noticed the model's pretty confident on textured defects but struggles with color-based anomalies. Textured surfaces give it way more clues to work with. Pure color shifts are tougher to catch since they don't have that structural information.
+I noticed the model's pretty confident on textured defects but struggles with color-based anomalies. Textured surfaces give it way more clues to work with. Pure color shifts are tougher to catch since they don't have that structural information. It makes sense when you think about how the feature extractors work.
 
-**Coarse-to-Fine Works.** Multi-scale features hit better results than single-scale extraction. Makes sense since you catch defects at different levels—some show up at a coarse scale, others need fine details.
+Multi-scale features hit better results than single-scale extraction. Makes sense since you catch defects at different levels—some show up at a coarse scale, others need fine details. Mixing both scales gives more robust detections.
 
-**What Could Be Better.** With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time.
+With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.

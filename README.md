@@ -39,12 +39,12 @@ Open `notebook.ipynb` and run all cells. Runtime:
 
 ## Approach
 
-I tackled **unsupervised anomaly detection and localization** on the MVTec carpet dataset. Two principal paradigms exist in this domain:
+I wanted to solve **unsupervised anomaly detection and localization** on the MVTec carpet dataset. There are two main ways people approach this:
 
-1. **Feature-Embedding-Based Methods** - Extract features and use distance-based approaches
-2. **Reconstruction-Based Methods** - Learn to reconstruct normal samples and detect anomalies via reconstruction error
+1. **Feature-Embedding-Based Methods** - Grab features and use distance metrics to spot anomalies
+2. **Reconstruction-Based Methods** - Train on normal samples and catch anomalies when reconstruction goes wrong
 
-Rather than relying on existing libraries, I built custom solutions to maximize control and flexibility for rapid experimentation.
+I decided to build stuff from scratch instead of using pre-made libraries. This way, I'd have full control to experiment and tweak things quickly.
 
 ### Methods Explored
 
@@ -79,8 +79,8 @@ Rather than relying on existing libraries, I built custom solutions to maximize 
 
 ### Key Observations
 
-- **Best Performance:** Feature extraction with vector indexing (FAISS) and KNN provides superior evaluation scores across both detection and localization tasks
-- **Dataset Limitations:** The carpet dataset is small and lacks diversity (e.g., few 45-degree rotated images), which may limit generalization
-- **Texture Sensitivity:** I observed the model shows higher confidence on textured defects; color-based anomalies are harder to detect
-- **Coarse-to-Fine:** I found that extracting features at multiple scales improves detection performance
-- **Future Potential:** I believe diffusion models (e.g., Stable Diffusion, Flux) with latent space or LoRA fine-tuning could yield better results with sufficient computational resources
+- **Best Performance:** Feature extraction with FAISS indexing and KNN actually works best—beats most other approaches I tried
+- **Dataset Limitations:** The carpet dataset is pretty small and not super diverse (not many 45-degree rotated images, for example). So there's a ceiling on how well any model can generalize
+- **Texture Sensitivity:** I noticed the model's pretty confident on textured defects but struggles with color-based anomalies. Textured surfaces give it way more clues
+- **Coarse-to-Fine Works:** Multi-scale features hit better results than single-scale. Makes sense since you catch defects at different levels
+- **What Could Be Better:** With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast

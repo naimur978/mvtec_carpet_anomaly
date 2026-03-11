@@ -1,5 +1,3 @@
-For a visual overview of this project, see the presentation in `mvtec.pptx`.
-
 ## Setup
 
 **1. Ensure Python version:**
@@ -175,3 +173,5 @@ TTA (Test Time Augmentation) could make the inference robust, but when I tried i
 ## What I would do
 
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
+
+For a visual overview, check the presentation [mvtec.pptx](mvtec.pptx) and explore the [assets](assets/) folder for visualizations and analysis diagrams.

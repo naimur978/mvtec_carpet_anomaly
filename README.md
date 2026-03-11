@@ -17,17 +17,22 @@ pip install -r requirements.txt
 ```
 
 **4. Prepare dataset:**
-Download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view) and place it under the `dataset` folder.
+Create a `dataset` folder in the root directory and download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view). Extract it into the `dataset` folder.
 
-**5. Prepare folder structure:**
+**5. Verify folder structure:**
 After step 4, the project structure should look like:
 ```
-upm_interview_3/
+mvtec_carpet_anomaly/
 ├── dataset/
-│   └── carpet.tar.xz
+│   ├── carpet/
+│   │   ├── good/
+│   │   ├── defective/
+│   │   └── ...
+│   └── .gitkeep
 ├── notebook.ipynb
 ├── requirements.txt
 ├── README.md
+├── config.py
 └── venv/
 ```
 

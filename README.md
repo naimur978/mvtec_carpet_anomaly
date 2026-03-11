@@ -150,7 +150,7 @@ Right now, in my code, i am choosing patches randomly, i wanted to see how spars
 
 ![Patches](assets/patches.png)
 
-### Key Observations
+### Observations
 
 Feature extraction with FAISS indexing and KNN actually works best—beats most other approaches I tried. It consistently delivers solid detection and localization scores without needing heavy computational resources. The simplicity is part of the appeal; it just gets the job done.
 
@@ -162,6 +162,6 @@ Multi-scale features hit better results than single-scale extraction. Makes sens
 
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
 
-TTA
+TTA could make the inference robust, but when I tried it didnt improve that much, because as I said earlier augmentation works better when the nature of the picture is uncertain, but the dataset i have seems taken in controlled environment with proper cropping. TTA would work better if the images would be taken from random angles. Here, geometrice augmentation introduced noise rather than providing useful variation.
 
 

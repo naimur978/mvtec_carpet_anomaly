@@ -8,7 +8,7 @@ Python 3.14.3
 **2. Create and activate virtual environment:**
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Mac
+source venv/bin/activate  # On Mac 
 ```
 
 **3. Install dependencies:**
@@ -174,4 +174,4 @@ TTA (Test Time Augmentation) could make the inference robust, but when I tried i
 
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
 
-For a visual overview, check the presentation [mvtec.pptx](mvtec.pptx) and explore the [assets](assets/) folder for visualizations and analysis diagrams.
+Here is the presentation [presentation](assets/mvtec.pptx) file.

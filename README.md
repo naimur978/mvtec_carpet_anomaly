@@ -99,4 +99,4 @@ With GPU and more time, diffusion models (like Stable Diffusion or Flux) with la
 | U-Net Reconstruction | – | – | 0.5269 | – |
 | DINOv2 AutoEncoder | – | – | 0.8431 | – |
 | Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
-| Coarse-to-Fine + FAISS + kNN | 0.9915 | 0.9337 | 1.0000 | ~6.5 |
+| **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |

@@ -36,3 +36,51 @@ mvtec_carpet_anomaly/
 Open `notebook.ipynb` and run all cells. Runtime:
 - **CPU:** ~3-4 minutes
 - **GPU:** ~2 minutes
+
+## Approach
+
+This project tackles **unsupervised anomaly detection and localization** on the MVTec carpet dataset. Two principal paradigms exist in this domain:
+
+1. **Feature-Embedding-Based Methods** - Extract features and use distance-based approaches
+2. **Reconstruction-Based Methods** - Learn to reconstruct normal samples and detect anomalies via reconstruction error
+
+Rather than relying on existing libraries, this implementation builds custom solutions to maximize control and flexibility for rapid experimentation.
+
+### Methods Explored
+
+**Feature Extraction & Indexing:**
+- Cosine and Euclidean distance metrics
+- Neighbor size optimization
+- Duplicate detection in training data
+- Data augmentation techniques
+
+**Feature Extractors:**
+- DINOv2
+- Qwen feature extractor
+- ResNet feature extractor
+- Coarse-to-fine feature extraction strategies
+
+**Vector Indexing:**
+- Different FAISS indices
+- Full vs. small coreset approaches
+- KNN-based anomaly detection
+
+**Evaluation Metrics:**
+- ROC-AUC (image-level)
+- ROC-AUC (pixel-level)
+- ROC-Pro
+- Otsu thresholding for masking and bounding boxes
+
+**Reconstruction-Based Methods:**
+- DDPM (Denoising Diffusion Probabilistic Models)
+- RD4AD
+- UNet
+- DINOv2 autoencoder
+
+### Key Observations
+
+- **Best Performance:** Feature extraction with vector indexing (FAISS) and KNN provides superior evaluation scores across both detection and localization tasks
+- **Dataset Limitations:** The carpet dataset is small and lacks diversity (e.g., few 45-degree rotated images), which may limit generalization
+- **Texture Sensitivity:** The model shows higher confidence on textured defects; color-based anomalies are harder to detect
+- **Coarse-to-Fine:** Extracting features at multiple scales improves detection performance
+- **Future Potential:** Diffusion models (e.g., Stable Diffusion, Flux) with latent space or LoRA fine-tuning could yield better results with sufficient computational resources

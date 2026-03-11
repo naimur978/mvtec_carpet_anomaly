@@ -1,3 +1,5 @@
+For a visual overview of this project, see the presentation in `mvtec.pptx`.
+
 ## Setup
 
 **1. Ensure Python version:**
@@ -120,7 +122,7 @@ Evaluation is conducted using:
 
 ### Results
 
-## Quantitative
+
 
 | Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
 |--------|---------------|--------|-------------|-----|
@@ -132,6 +134,7 @@ Evaluation is conducted using:
 | Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
 | **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |
 
+I put some of my draft notebooks on these models under "assets" folder.
 
 
 For anomaly localization, I ultimately used **Otsu’s Thresholding method** to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most **reliable and consistent with the ROC-AUC results**.
@@ -160,8 +163,15 @@ I noticed the model's pretty confident on textured defects but struggles with co
 
 Multi-scale features hit better results than single-scale extraction. Makes sense since you catch defects at different levels—some show up at a coarse scale, others need fine details. Mixing both scales gives more robust detections.
 
+
+
+TTA (Test Time Augmentation) could make the inference robust, but when I tried it didnt improve that much, because as I said earlier augmentation works better when the nature of the picture is uncertain, but the dataset i have seems taken in controlled environment with proper cropping. TTA would work better if the images would be taken from random angles. Here, geometrice augmentation introduced noise rather than providing useful variation.
+
+
+## Limitations
+
+
+
+## What I would do
+
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
-
-TTA could make the inference robust, but when I tried it didnt improve that much, because as I said earlier augmentation works better when the nature of the picture is uncertain, but the dataset i have seems taken in controlled environment with proper cropping. TTA would work better if the images would be taken from random angles. Here, geometrice augmentation introduced noise rather than providing useful variation.
-
-

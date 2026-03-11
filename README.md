@@ -116,13 +116,27 @@ Evaluation is conducted using:
 
 
 
-## Mask Generation
+
+
+### Results
+
+## Quantitative
+
+| Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
+|--------|---------------|--------|-------------|-----|
+| ResNet Feature Extraction | 0.9339 | 0.6720 | 0.9446 | 3.35 |
+| DDPM Diffusion | – | – | 0.5313 | – |
+| RD4AD | – | – | 0.5173 | – |
+| U-Net Reconstruction | – | – | 0.5269 | – |
+| DINOv2 AutoEncoder | – | – | 0.8431 | – |
+| Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
+| **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |
+
+
 
 For anomaly localization, I ultimately used **Otsu’s Thresholding method** to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most **reliable and consistent with the ROC-AUC results**.
 
 ![Mask](assets/mask.png)
-
-### Results
 
 Normal images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them. 
 
@@ -131,6 +145,10 @@ Normal images consistently produce lower anomaly scores than defective ones, whi
 Obviously the features are more affected by the textures, which is why i am getting better anomaly scores for "cut" and "hole". Which is why, "color" defects gave worse score compared to its peers, cz of lack of  geometric or texture disruptions.
 
 ![Defects](assets/defects.png)
+
+Right now, in my code, i am choosing patches randomly, i wanted to see how sparse they are. They look good enough, but the one i am trying is random, i could retain most representative and diverse patches using algorithms like greedy coreset. But roc-auc score is already good enough right now, so didnt' change much here.
+
+![Patches](assets/patches.png)
 
 ### Key Observations
 
@@ -144,15 +162,6 @@ Multi-scale features hit better results than single-scale extraction. Makes sens
 
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
 
+TTA
 
-## Results
 
-| Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
-|--------|---------------|--------|-------------|-----|
-| ResNet Feature Extraction | 0.9339 | 0.6720 | 0.9446 | 3.35 |
-| DDPM Diffusion | – | – | 0.5313 | – |
-| RD4AD | – | – | 0.5173 | – |
-| U-Net Reconstruction | – | – | 0.5269 | – |
-| DINOv2 AutoEncoder | – | – | 0.8431 | – |
-| Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
-| **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |

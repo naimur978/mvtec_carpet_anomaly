@@ -91,15 +91,7 @@ With GPU and more time, diffusion models (like Stable Diffusion or Flux) with la
 
 ## Architecture
 
-```
-                                          DINOv2
-                                            ↑
-Data → Remove Duplicates → Augmentation → Feature Extraction → FAISS L2 Index
-                                          (Fine to Coarse)         ↓
-                                                                   KNN
-                                                                    ↓
-                             ← ROC-AUC, ROC-PRO ← Classification and Localization
-```
+![Architecture Diagram](assets/architecture.png)
 
 The pipeline starts with clean data, applies augmentation, extracts multi-scale features using DINOv2, indexes them with FAISS for fast retrieval, and uses KNN for anomaly detection. Evaluation uses ROC-AUC (image and pixel level) and ROC-PRO metrics.
 

@@ -88,3 +88,15 @@ I noticed the model's pretty confident on textured defects but struggles with co
 Multi-scale features hit better results than single-scale extraction. Makes sense since you catch defects at different levels—some show up at a coarse scale, others need fine details. Mixing both scales gives more robust detections.
 
 With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
+
+## Results
+
+| Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
+|--------|---------------|--------|-------------|-----|
+| ResNet Feature Extraction | 0.9339 | 0.6720 | 0.9446 | 3.35 |
+| DDPM Diffusion | – | – | 0.5313 | – |
+| RD4AD | – | – | 0.5173 | – |
+| U-Net Reconstruction | – | – | 0.5269 | – |
+| DINOv2 AutoEncoder | – | – | 0.8431 | – |
+| Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
+| Coarse-to-Fine + FAISS + kNN | 0.9915 | 0.9337 | 1.0000 | ~6.5 |

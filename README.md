@@ -53,7 +53,13 @@ I chose to build most components **from scratch** instead of relying on pre-buil
 
 ## Architecture
 
-![Architecture Diagram](assets/architecture.png)
+<div align="center">
+
+![Figure 1: Pipeline Architecture](assets/architecture.png)
+
+**Figure 1:** The complete pipeline showing data flow from training images through feature extraction, FAISS indexing, KNN classification, and final localization.
+
+</div>
 
 The pipeline starts with the normal ("good") training images. I experimented with several augmentation strategies. However, since the images were captured from a very consistent angle and under controlled conditions, augmentations did not improve performance and in some cases even degraded it.
 
@@ -134,21 +140,45 @@ The bottom method (with bold texts) is quite accurate when I tested it on the te
 I put some of my draft codes on these models under "assets" folder.
 
 
-For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can't capture the curves properly.
+For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly.
 
-![Mask](assets/mask.png)
+<div align="center">
 
-"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them. 
+![Figure 2: Anomaly Mask Generation](assets/mask.png)
 
-![Threshold](assets/threshold.png)
+**Figure 2:** Sample results showing input images, anomaly heatmaps, and generated binary masks using Otsu thresholding.
+
+</div>
+
+"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them.
+
+<div align="center">
+
+![Figure 3: Threshold Distribution](assets/threshold.png)
+
+**Figure 3:** Distribution of anomaly scores for normal and defective samples. The threshold (vertical line) cleanly separates the two classes.
+
+</div>
 
 The features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores. In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
 
-![Defects](assets/defects.png)
+<div align="center">
+
+![Figure 4: Defect Type Performance](assets/defects.png)
+
+**Figure 4:** Anomaly scores broken down by defect type. Textured defects (cut, hole, thread) show higher confidence while color defects are more challenging.
+
+</div>
 
 Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is. The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
 
-![Patches](assets/patches.png)
+<div align="center">
+
+![Figure 5: Patch Distribution](assets/patches.png)
+
+**Figure 5:** Visualization of randomly selected patch locations on carpet images. Shows spatial coverage across training samples.
+
+</div>
 
 ### Observations
 

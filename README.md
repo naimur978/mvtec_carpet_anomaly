@@ -212,7 +212,7 @@ I would also prefer to implement the pipeline as standalone scripts instead of r
 
 My device does not have a CUDA-enabled GPU, so I had to rely on Kaggle’s GPU environment. Because of this limitation, most of the experiments were conducted in a notebook rather than through standalone scripts.
 
-Here is the presentation [presentation](assets/mvtec.pptx) file.
+Here is the [presentation](assets/mvtec.pptx) file.
 
 I put some of my draft codes on these models under "assets" folder.
 

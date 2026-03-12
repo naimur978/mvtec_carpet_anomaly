@@ -140,7 +140,7 @@ The bottom method (with bold texts) is quite accurate when I tested it on the te
 I put some of my draft codes on these models under "assets" folder.
 
 
-For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly.
+For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks (Figure 2). After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly.
 
 <div align="center">
 
@@ -150,7 +150,7 @@ For anomaly localization, I ultimately used Otsu’s Thresholding method to conv
 
 </div>
 
-"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them.
+"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them (Figure 3).
 
 <div align="center">
 
@@ -160,7 +160,7 @@ For anomaly localization, I ultimately used Otsu’s Thresholding method to conv
 
 </div>
 
-The features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores. In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
+The features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores (Figure 4). In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
 
 <div align="center">
 
@@ -170,7 +170,7 @@ The features are clearly more sensitive to texture changes, which is why defects
 
 </div>
 
-Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is. The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
+Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is (Figure 5). The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
 
 <div align="center">
 

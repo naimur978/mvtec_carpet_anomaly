@@ -1,21 +1,26 @@
 ## Setup
 
-**1. Ensure Python version:```
+**1. Ensure Python version:**
+```
 Python 3.14.3
 ```
 
-**2. Create and activate virtual environment:```bash
+**2. Create and activate virtual environment:**
+```bash
 python3 -m venv venv
 source venv/bin/activate  # On Mac 
 ```
 
-**3. Install dependencies:```bash
+**3. Install dependencies:**
+```bash
 pip install -r requirements.txt
 ```
 
-**4. Prepare dataset:Create a `dataset` folder in the root directory and download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view). Extract it into the `dataset` folder.
+**4. Prepare dataset:**
+Create a `dataset` folder in the root directory and download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view). Extract it into the `dataset` folder.
 
-**5. Verify folder structure:After step 4, the project structure should look like:
+**5. Verify folder structure:**
+After step 4, the project structure should look like:
 ```
 mvtec_carpet_anomaly/
 ├── dataset/
@@ -27,44 +32,49 @@ mvtec_carpet_anomaly/
 └── venv/
 ```
 
-**6. Run notebook:Open `notebook.ipynb` and run all cells. Runtime:
+**6. Run notebook:**
+Open `notebook.ipynb` and run all cells. Runtime:
 - **CPU:** ~3-4 minutes
 - **GPU:** ~2 minutes
 
 ## My Approach
 
-This is an **unsupervised anomaly detection problem**. There is essentially one normal class to model. The dataset contains **89 defective images (1K resolution)**. With such a small number of anomalous samples, there is a clear risk of overfitting if a supervised approach is used. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
+This is an unsupervised anomaly detection problem. There is essentially one "good" class to model. The dataset contains 89 defective images (1K resolution). With such a small number of anomalous samples, there is a clear risk of overfitting if a supervised approach is used. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
 
-My plan was to first determine **whether an image is anomalous or not**, and then **generate a heatmap to localize the anomaly**. Ground truth masks are provided for the test set, which allows evaluation at the end of the pipeline. However, these masks cannot be used during training. Therefore, for localization I needed to design a **thresholding strategy to generate masks from anomaly scores**, which I will explain later in this document.
+My plan was to first determine whether an image is anomalous or not, and then generate a heatmap to localize the anomaly. Ground truth masks are provided for the test set, which allows evaluation at the end of the pipeline. However, these masks cannot be used during training. Therefore, for localization I needed to customize a thresholding strategy to generate masks from anomaly scores, which I will explain later in this document.
 
 There are two primary ways to approach anomaly detection in this context:
 
-1. **Feature-Embedding-Based Methods2. **Reconstruction-Based Methods
+1. Feature-Embedding-Based Methods
+2. Reconstruction-Based Methods
+
 I chose to build most components **from scratch** instead of relying on pre-built frameworks such as *anomalib*. This gave me full control over the pipeline and allowed me to experiment and iterate quickly. My initial goal was to achieve reasonable performance using traditional methods. If that was insufficient, I planned to move toward approaches inspired by more recent research papers.
 
----
 
 ## Architecture
 
 ![Architecture Diagram](assets/architecture.png)
 
-The pipeline starts with the **normal ("good") training images**. I experimented with several augmentation strategies. However, since the images were captured from a very consistent angle and under controlled conditions, augmentations did not improve performance and in some cases even degraded it.
+The pipeline starts with the normal ("good") training images. I experimented with several augmentation strategies. However, since the images were captured from a very consistent angle and under controlled conditions, augmentations did not improve performance and in some cases even degraded it.
 
 This observation is consistent with findings reported in [Revisiting Reverse Distillation for Anomaly Detection](https://arxiv.org/pdf/2304.03294).
 
-The authors note that *combining multiple augmentation methods does not necessarily improve anomaly detection accuracy*.
+The authors said that *combining multiple augmentation methods does not necessarily improve anomaly detection accuracy*.
 
-I experimented with different **feature extraction approaches**, including both transformer-based and traditional CNN-based methods. Ultimately, **DINOv2** provided the most stable and effective features. I also tested **DINOv3**, but it did not improve performance and required significantly more computation time.
+I experimented with different feature extraction approaches, including both transformer-based and traditional CNN-based methods. Ultimately, DINOv2 provided the most stable and effective features. I also tested DINOv3, but it did not improve performance and required significantly more computation time.
 
-Additionally, I experimented with **multi-scale feature extraction** instead of using only fixed **224×224 inputs**, which improved the ROC-AUC score.
+Additionally, I experimented with multi-scale feature extraction instead of using only fixed 224×224 inputs, which improved the ROC-AUC score.
 
-For **vector indexing**, I evaluated several FAISS-based indices such as **HNSW** and **IVF**. In my experiments, **L2-based indexing performed faster and more reliably**. I also briefly evaluated **ScaNN**.
+For vector indexing, I evaluated several FAISS-based indices such as HNSW and IVF. In my experiments, L2-based indexing performed faster and more reliably. I also briefly evaluated ScaNN that didn't work out.
 
-Anomaly scoring is performed using **k-nearest neighbors (kNN)** in the feature embedding space.
+Anomaly scoring is performed using k-nearest neighbors (kNN) in the feature embedding space (following PatchCore's concept).
 
 Evaluation is conducted using:
 
-- **ROC-AUC (image-level)- **ROC-AUC (pixel-level)- **ROC-PRO
+- ROC-AUC (image-level)
+- ROC-AUC (pixel-level)
+- ROC-PRO
+
 
 
 ## Other Methods I Explored
@@ -109,7 +119,7 @@ Evaluation is conducted using:
 
 ### Results
 
-The bottom one is pretty accurate when i tested with the test set. I tried some lightweight diffusion or VAE based models, that's why the AUROC is not that good. However, I am optimistic that it's gonna improve if i try SoTA reconstruction based models. But for now, for the "carpet" dataset my approach is fine. I randomly tried the test set data, at least, classification of whether it is "good" or "defected" is always correct.
+The bottom method (with bold texts) is quite accurate when I tested it on the test set. I also tried some lightweight diffusion and VAE-based models, where their AUROC scores are not very strong. I believe the results could improve if I experiment with more SoTA reconstruction-based models. For the "carpet" dataset, however, my current approach works well. In my random tests on the test set, the classification of whether an image is "good" or "defective" was always to the point.
 
 | Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
 |--------|---------------|--------|-------------|-----|
@@ -124,46 +134,51 @@ The bottom one is pretty accurate when i tested with the test set. I tried some 
 I put some of my draft codes on these models under "assets" folder.
 
 
-For anomaly localization, I ultimately used **Otsu’s Thresholding method** to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most **reliable and consistent with the ROC-AUC results**. I do, however, think that localization could be improved more. Right now, it can say the region, but can't capture the curves properly.
+For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can't capture the curves properly.
 
 ![Mask](assets/mask.png)
 
-Normal images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them. 
+"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them. 
 
 ![Threshold](assets/threshold.png)
 
-Obviously the features are more affected by the textures, which is why i am getting better anomaly scores for "cut" and "hole". Which is why, "color" defects gave worse score compared to its peers, cz of lack of  geometric or texture disruptions.
+The features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores. In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
 
 ![Defects](assets/defects.png)
 
-Right now, in my code, i am choosing patches randomly, i wanted to see how sparse they are. They look good enough, but the one i am trying is random, i could retain most representative and diverse patches using algorithms like greedy coreset. But roc-auc score is already good enough right now, so didnt' change much here.
+Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is. The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
 
 ![Patches](assets/patches.png)
 
 ### Observations
 
-Feature extraction with FAISS indexing and KNN actually works best—beats most other approaches I tried. It consistently delivers solid detection and localization scores without needing heavy computational resources. The simplicity is part of the appeal; it just gets the job done.
+Feature extraction with FAISS indexing and KNN actually works best, beats most other approaches I tried. It consistently delivers solid detection and localization scores without needing heavy computational resources. 
 
-The carpet dataset is pretty small and not super diverse. There aren't many 45-degree rotated images or extreme variations, which means there's a natural ceiling on how well any model can generalize. It's a limitation of the data itself, not necessarily the approach. That's something to keep in mind.
+The carpet dataset is pretty small and not super diverse. E.g., there aren't many 45-degree rotated images or extreme variations e.g. linear transoform or non-linear warping, which means there's a natural ceiling on how well any model can generalize. It's a limitation of the data itself, not necessarily the approach. 
 
-I noticed the model's pretty confident on textured defects but struggles with color-based anomalies. Textured surfaces give it way more clues to work with. Pure color shifts are tougher to catch since they don't have that structural information. It makes sense when you think about how the feature extractors work.
+I noticed the model's pretty confident on textured defects but struggles with color-based anomalies, which is quite obvious. Textured surfaces give it way more clues to work with. Pure color shifts are tougher to catch since they don't have that structural information. 
 
-Multi-scale features hit better results than single-scale extraction. Makes sense since you catch defects at different levels—some show up at a coarse scale, others need fine details. Mixing both scales gives more robust detections.
+Multi-scale features hit better results than single-scale extraction. Makes sense since I can catch defects at different levels—some show up at a coarse scale, others need fine details. Mixing both scales gives more robust detections.
 
 
-
-TTA (Test Time Augmentation) could make the inference robust, but when I tried it didnt improve that much, because as I said earlier augmentation works better when the nature of the picture is uncertain, but the dataset i have seems taken in controlled environment with proper cropping. TTA would work better if the images would be taken from random angles. Here, geometrice augmentation introduced noise rather than providing useful variation.
+Test Time Augmentation (TTA) can make inference more robust, but in my experiments it did not improve performance much. As mentioned earlier, augmentation usually helps when images are captured under uncertain conditions. However, this dataset appears to be collected in a controlled environment with consistent cropping and viewpoint. TTA would likely be more useful if the images were taken from varying angles or conditions. In this case, especially for carpet data, geometric augmentations mostly introduced noise rather than meaningful variation.
 
 
 ## Limitations
 
-The dataset could be more diverse, and from different angle to check how robust the model is. Right now, my approach is not optimized. If I would use reconstruction based methods like stable diffusion, encoder-decoder based models, I could try with SIMD based optimization, like batching, broadcasting. My current code's patch feature extraction could be made more optimized to make it more diverse. Right now, there is a possibility of overfitting, on google I tried to check with some carpets, but there texture is totally different, so got bad anomaly score all the time.
-
-Unfortunately, my device doesn't have CUDA based GPU. So I had to rely on Kaggle's GPU. Hence I couldn't try with scripts, had to work on notebook.
+The dataset could benefit from more diversity, especially images captured from different angles, to better evaluate how robust the model is. At the moment, my approach is not heavily optimized. If I explored reconstruction-based methods such as Stable Diffusion or encoder–decoder architectures, I could apply SIMD-based optimizations like batching and broadcasting, reducing duplicate calls to improve efficiency. The current patch feature extraction pipeline could also be optimized further to improve diversity and representation. There is also a possibility of overfitting. When I tested the model on random carpet images from Google, their textures were very different, and the model often produced high anomaly scores.
 
 
-## What I would do
 
-With GPU and more time, diffusion models (like Stable Diffusion or Flux) with latent space tweaks or LoRA fine-tuning would probably crush this. But that's a whole different beast that needs serious computational power and paper implementation time. It's on my wishlist for future work.
+
+## Future Direction
+
+In this work I mainly experimented with feature encoders, but another direction would be to incorporate a context encoder similar to the one used in the RAFT paper. With access to stronger GPUs and more time, diffusion-based models such as Stable Diffusion or Flux, possibly combined with latent space modifications or LoRA fine-tuning, could potentially improve the results. However, these approaches require significantly more computational resources and careful implementation based on research papers, along with substantial trial and error.
+
+I would also prefer to implement the pipeline as standalone scripts instead of relying entirely on notebooks. Scripts tend to be more modular, easier to reason about, and simpler to integrate with code from other research papers.
+
+### Note
+
+Unfortunately, my device does not have a CUDA-enabled GPU, so I had to rely on Kaggle’s GPU environment. Because of this limitation, most of the experiments were conducted in a notebook rather than through standalone scripts.
 
 Here is the presentation [presentation](assets/mvtec.pptx) file.

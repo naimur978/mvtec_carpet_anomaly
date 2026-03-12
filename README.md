@@ -39,7 +39,7 @@ Open `notebook.ipynb` and run all cells. Runtime:
 
 ## My Approach
 
-This is an unsupervised anomaly detection problem. There is apparently one "good" class in the dataset. The dataset contains 89 defective test images (1K resolution). With such a small number of anomalous samples, there is a clear risk of overfitting. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
+This is an unsupervised anomaly detection problem. There is apparently one "good" class in the dataset. The dataset contains 89 defective test images (1K resolution), which are not that much to prove my model robust enough. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
 
 My plan was to first determine whether an image is anomalous or not, and then generate a heatmap to localize the anomaly. Ground truth masks are provided for the test set, which allows evaluation at the end of the pipeline. However, these masks cannot be used during training as ground truths are for the corresponding test dataset. Therefore, for localization I needed to customize a thresholding strategy to generate masks from anomaly scores, which I will explain later in this document.
 

@@ -61,7 +61,7 @@ I chose to build most components **from scratch** instead of relying on pre-buil
 
 </div>
 
-As shown in Figure 1, the pipeline starts with the normal ("good") training images. I experimented with several augmentation strategies. However, since the images were captured from a very consistent angle and under controlled conditions, augmentations did not improve performance and in some cases even degraded it.
+The pipeline starts with the normal ("good") training images. I experimented with several augmentation strategies. However, since the images were captured from a very consistent angle and under controlled conditions, augmentations did not improve performance and in some cases even degraded it.
 
 This observation is consistent with findings reported in [Revisiting Reverse Distillation for Anomaly Detection](https://arxiv.org/pdf/2304.03294).
 
@@ -140,7 +140,7 @@ The bottom method (with bold texts) is quite accurate when I tested it on the te
 I put some of my draft codes on these models under "assets" folder.
 
 
-For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly. As shown in Figure 2, the method produces reasonable mask approximations.
+For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly.
 
 <div align="center">
 
@@ -150,7 +150,7 @@ For anomaly localization, I ultimately used Otsu’s Thresholding method to conv
 
 </div>
 
-"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them. This is illustrated in Figure 3.
+"Good" images consistently produce lower anomaly scores than defective ones, which allows me to set an optimized threshold based on roc curve that reliably distinguishes them.
 
 <div align="center">
 
@@ -160,7 +160,7 @@ For anomaly localization, I ultimately used Otsu’s Thresholding method to conv
 
 </div>
 
-As shown in Figure 4, the features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores. In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
+The features are clearly more sensitive to texture changes, which is why defects like "cut" and "hole" produce higher anomaly scores. In contrast, "color" defects receive lower scores because they lack strong geometric or texture disruptions.
 
 <div align="center">
 
@@ -170,7 +170,7 @@ As shown in Figure 4, the features are clearly more sensitive to texture changes
 
 </div>
 
-Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is (Figure 5). The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
+Right now, my code selects patches randomly. So I wanted to see how sparse the distribution is. The coverage looks reasonable, but since the sampling is random it could be improved. A better approach would be to retain more representative and diverse patches using methods such as greedy coreset selection. However, since the ROC-AUC score is already strong, I did not change this part much.
 
 <div align="center">
 

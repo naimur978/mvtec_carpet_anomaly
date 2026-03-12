@@ -1,26 +1,21 @@
 ## Setup
 
-**1. Ensure Python version:**
-```
+**1. Ensure Python version:```
 Python 3.14.3
 ```
 
-**2. Create and activate virtual environment:**
-```bash
+**2. Create and activate virtual environment:```bash
 python3 -m venv venv
 source venv/bin/activate  # On Mac 
 ```
 
-**3. Install dependencies:**
-```bash
+**3. Install dependencies:```bash
 pip install -r requirements.txt
 ```
 
-**4. Prepare dataset:**
-Create a `dataset` folder in the root directory and download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view). Extract it into the `dataset` folder.
+**4. Prepare dataset:Create a `dataset` folder in the root directory and download `carpet.tar.xz` from [here](https://drive.google.com/file/d/1e0BF8gSs6zflzH2tBUN6vW40UjYv_a8N/view). Extract it into the `dataset` folder.
 
-**5. Verify folder structure:**
-After step 4, the project structure should look like:
+**5. Verify folder structure:After step 4, the project structure should look like:
 ```
 mvtec_carpet_anomaly/
 ├── dataset/
@@ -32,8 +27,7 @@ mvtec_carpet_anomaly/
 └── venv/
 ```
 
-**6. Run notebook:**
-Open `notebook.ipynb` and run all cells. Runtime:
+**6. Run notebook:Open `notebook.ipynb` and run all cells. Runtime:
 - **CPU:** ~3-4 minutes
 - **GPU:** ~2 minutes
 
@@ -45,9 +39,7 @@ My plan was to first determine **whether an image is anomalous or not**, and the
 
 There are two primary ways to approach anomaly detection in this context:
 
-1. **Feature-Embedding-Based Methods**
-2. **Reconstruction-Based Methods**
-
+1. **Feature-Embedding-Based Methods2. **Reconstruction-Based Methods
 I chose to build most components **from scratch** instead of relying on pre-built frameworks such as *anomalib*. This gave me full control over the pipeline and allowed me to experiment and iterate quickly. My initial goal was to achieve reasonable performance using traditional methods. If that was insufficient, I planned to move toward approaches inspired by more recent research papers.
 
 ---
@@ -72,10 +64,7 @@ Anomaly scoring is performed using **k-nearest neighbors (kNN)** in the feature 
 
 Evaluation is conducted using:
 
-- **ROC-AUC (image-level)**
-- **ROC-AUC (pixel-level)**
-- **ROC-PRO**
-
+- **ROC-AUC (image-level)- **ROC-AUC (pixel-level)- **ROC-PRO
 
 
 ## Other Methods I Explored

@@ -39,16 +39,16 @@ Open `notebook.ipynb` and run all cells. Runtime:
 
 ## My Approach
 
-This is an unsupervised anomaly detection problem. There is essentially one "good" class to model. The dataset contains 89 defective images (1K resolution). With such a small number of anomalous samples, there is a clear risk of overfitting if a supervised approach is used. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
+This is an unsupervised anomaly detection problem. There is apparently one "good" class in the dataset. The dataset contains 89 defective test images (1K resolution). With such a small number of anomalous samples, there is a clear risk of overfitting. However, in real industrial environments anomalies are typically rare, so having 89 defective samples in a controlled dataset is not unreasonable.
 
-My plan was to first determine whether an image is anomalous or not, and then generate a heatmap to localize the anomaly. Ground truth masks are provided for the test set, which allows evaluation at the end of the pipeline. However, these masks cannot be used during training. Therefore, for localization I needed to customize a thresholding strategy to generate masks from anomaly scores, which I will explain later in this document.
+My plan was to first determine whether an image is anomalous or not, and then generate a heatmap to localize the anomaly. Ground truth masks are provided for the test set, which allows evaluation at the end of the pipeline. However, these masks cannot be used during training as ground truths are for the corresponding test dataset. Therefore, for localization I needed to customize a thresholding strategy to generate masks from anomaly scores, which I will explain later in this document.
 
 There are two primary ways to approach anomaly detection in this context:
 
 1. Feature-Embedding-Based Methods
 2. Reconstruction-Based Methods
 
-I chose to build most components **from scratch** instead of relying on pre-built frameworks such as *anomalib*. This gave me full control over the pipeline and allowed me to experiment and iterate quickly. My initial goal was to achieve reasonable performance using traditional methods. If that was insufficient, I planned to move toward approaches inspired by more recent research papers.
+I chose to build most components from scratch instead of relying on pre-built frameworks such as *anomalib*. This gave me full control over the pipeline and allowed me to experiment and iterate quickly. My initial goal was to achieve reasonable performance using traditional methods. If that was insufficient, I planned to move toward approaches inspired by more recent research papers.
 
 
 ## Architecture
@@ -67,11 +67,11 @@ This observation is consistent with findings reported in [Revisiting Reverse Dis
 
 The authors said that *combining multiple augmentation methods does not necessarily improve anomaly detection accuracy*.
 
-I experimented with different feature extraction approaches, including both transformer-based and traditional CNN-based methods. Ultimately, DINOv2 provided the most stable and effective features. I also tested DINOv3, but it did not improve performance and required significantly more computation time.
+I experimented with different feature extraction approaches, including both transformer-based and traditional CNN-based methods. Ultimately, meta's DINOv2 provided the most stable and effective features. I also tested DINOv3, but it did not improve performance and required significantly more computation time.
 
-Additionally, I experimented with multi-scale feature extraction instead of using only fixed 224×224 inputs, which improved the ROC-AUC score.
+Additionally, I experimented with multi-scale feature extraction instead of using only fixed 224×224 inputs. This improved the ROC-AUC score because defects can appear at different spatial scales, and multi-scale features help capture both coarse texture patterns and fine local details. When the image is processed at a larger scale (2×), small defects such as thin threads occupy more pixels and become more visible to the feature extractor. At smaller scales (0.5×), the model captures broader texture patterns. Using multiple scales therefore allows the model to detect both fine local defects and larger structural anomalies.
 
-For vector indexing, I evaluated several FAISS-based indices such as HNSW and IVF. In my experiments, L2-based indexing performed faster and more reliably. I also briefly evaluated ScaNN that didn't work out.
+For vector indexing, I evaluated several FAISS-based indices such as HNSW and IVF. In my experiments, L2-based indexing performed faster and more reliably. I also briefly evaluated ScaNN for approximate nearest neighbor search, but it did not integrate well with the pipeline.
 
 Anomaly scoring is performed using k-nearest neighbors (kNN) in the feature embedding space (following PatchCore's concept).
 

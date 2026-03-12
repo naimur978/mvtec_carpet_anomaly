@@ -204,6 +204,8 @@ The dataset could benefit from more diversity, especially images captured from d
 
 In this work I mainly experimented with feature encoders, but another direction would be to incorporate a context encoder similar to the one used in the RAFT paper. With access to stronger GPUs and more time, diffusion-based models such as Stable Diffusion or Flux, possibly combined with latent space modifications or LoRA fine-tuning, could potentially improve the results. However, these approaches require significantly more computational resources and careful implementation based on research papers, along with substantial trial and error. For example, I have been working on concepts similar to those described in [Unseen Visual Anomaly Generation](https://openaccess.thecvf.com/content/CVPR2025/papers/Sun_Unseen_Visual_Anomaly_Generation_CVPR_2025_paper.pdf). The approach uses components such as Stable Diffusion, encoder–decoder architectures, and latent representations to generate synthetic anomalies. However, implementing such a pipeline inside a notebook environment within a short time frame is quite difficult.
 
+As the "carpet" dataset has a lot of textures, I can also work on SIFT-like feature extractors in the extractions stage. 
+
 I would also prefer to implement the pipeline as standalone scripts instead of relying entirely on notebooks. Scripts tend to be more modular, easier to reason about, and simpler to integrate with code from other research papers.
 
 ### Note

@@ -120,7 +120,7 @@ Evaluation is conducted using:
 
 ### Results
 
-
+The bottom one is pretty accurate when i tested with the test set. I tried some lightweight diffusion or VAE based models, that's why the AUROC is not that good. However, I am optimistic that it's gonna improve if i try SoTA reconstruction based models. But for now, for the "carpet" dataset my approach is fine. I randomly tried the test set data, at least, classification of whether it is "good" or "defected" is always correct.
 
 | Method | Pixel ROC-AUC | AU-PRO | Image AUROC | FPS |
 |--------|---------------|--------|-------------|-----|
@@ -132,10 +132,10 @@ Evaluation is conducted using:
 | Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
 | **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |
 
-I put some of my draft notebooks on these models under "assets" folder.
+I put some of my draft codes on these models under "assets" folder.
 
 
-For anomaly localization, I ultimately used **Otsu’s Thresholding method** to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most **reliable and consistent with the ROC-AUC results**.
+For anomaly localization, I ultimately used **Otsu’s Thresholding method** to convert the anomaly heatmap into binary masks. After experimenting with several thresholding strategies, this method proved to be the most **reliable and consistent with the ROC-AUC results**. I do, however, think that localization could be improved more. Right now, it can say the region, but can't capture the curves properly.
 
 ![Mask](assets/mask.png)
 
@@ -168,6 +168,9 @@ TTA (Test Time Augmentation) could make the inference robust, but when I tried i
 
 ## Limitations
 
+The dataset could be more diverse, and from different angle to check how robust the model is. Right now, my approach is not optimized. If I would use reconstruction based methods like stable diffusion, encoder-decoder based models, I could try with SIMD based optimization, like batching, broadcasting. My current code's patch feature extraction could be made more optimized to make it more diverse. Right now, there is a possibility of overfitting, on google I tried to check with some carpets, but there texture is totally different, so got bad anomaly score all the time.
+
+Unfortunately, my device doesn't have CUDA based GPU. So I had to rely on Kaggle's GPU. Hence I couldn't try with scripts, had to work on notebook.
 
 
 ## What I would do

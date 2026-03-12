@@ -137,7 +137,6 @@ The bottom method (with bold texts) is quite accurate when I tested it on the te
 | Cosine + Flip Augmentation | 0.9914 | 0.9339 | 1.0000 | 6.82 |
 | **Coarse-to-Fine + FAISS + kNN** | **0.9915** | **0.9337** | **1.0000** | **~6.5** |
 
-I put some of my draft codes on these models under "assets" folder.
 
 
 For anomaly localization, I ultimately used Otsu’s Thresholding method to convert the anomaly heatmap into binary masks (Figure 2). After experimenting with several thresholding strategies, this method proved to be the most reliable and consistent with the ROC-AUC results. I do, however, think that localization could be improved more. Right now, it can say the region, but can’t capture the curves properly.
@@ -209,6 +208,9 @@ I would also prefer to implement the pipeline as standalone scripts instead of r
 
 ### Note
 
-Unfortunately, my device does not have a CUDA-enabled GPU, so I had to rely on Kaggle’s GPU environment. Because of this limitation, most of the experiments were conducted in a notebook rather than through standalone scripts.
+My device does not have a CUDA-enabled GPU, so I had to rely on Kaggle’s GPU environment. Because of this limitation, most of the experiments were conducted in a notebook rather than through standalone scripts.
 
 Here is the presentation [presentation](assets/mvtec.pptx) file.
+
+I put some of my draft codes on these models under "assets" folder.
+
